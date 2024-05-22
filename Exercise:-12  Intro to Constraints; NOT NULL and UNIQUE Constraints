@@ -1,0 +1,62 @@
+1.   What is a “constraint” as it relates to data integrity?
+
+Database can be as reliable as the data in it, and database rules are implemented as Constraint to maintain data integrity. 
+For example these constraints may prohibit deletion of a table or some row when insertion, updation or deletion is executed. Type of constraints:
+    · PRIMARY KEY Constraint
+    · UNIQUE Constraint
+    · FOREIGN KEY Constraint
+    · CHECK Constraint with condition applied on the column/columns (they work at row level)
+    · NOT NULL Constraint (implemented at row level using special CHECK Constraint having condition IS NOT NULL for single column)
+
+
+2.   What are the limitations of constraints that may be applied at the column level and at the table level?
+
+    · Constraints referring to more than one column are defined at Table Level
+    · NOT NULL constraint must be defined at column level as per ANSI/ISO SQL standard.
+    · If word CONSTRAINT is used in a CREATE TABLE statement, I must specify constraint name. Also, that is why, Table level constraint must be user-named.
+
+
+3.  Why is it important to give meaningful names to constraints?
+
+    · If a constraint is violated in a SQL statement execution, it is easy to identify the cause with user-named constraints.
+    · It is easy to alter names/drop constraint.
+    · Handling production issues may be faster with user-named constraints
+
+
+ 6.  Write the CREATE TABLE statement for the Global Fast Foods locations table to define the constraints at the column level.
+
+CREATE TABLE  f_global_locations
+( id NUMBER(6,0) CONSTRAINT f_gln_id_pk PRIMARY KEY ,
+name VARCHAR2(50),
+date_opened DATE CONSTRAINT f_gln_dt_opened_nn NOT NULL ENABLE,
+address VARCHAR2(50) CONSTRAINT f_gln_add_nn NOT NULL ENABLE,
+city VARCHAR2(30)  CONSTRAINT f_gln_city_nn NOT NULL ENABLE,
+zip_postal_code VARCHAR2(12),
+phone VARCHAR2(20),
+email VARCHAR2(75) CONSTRAINT f_gln_email_uk UNIQUE,
+manager_id NUMBER(6,0),
+emergency_contact VARCHAR2(20)
+);
+
+
+8.  Execute a DESCRIBE command to view the Table Summary information.
+
+DESCRIBE f_global_locations;
+
+
+9.  Rewrite the CREATE TABLE statement for the Global Fast Foods locations table to define the UNIQUE constraints at the table level. Do not execute this statement.
+
+CREATE TABLE  f_global_locations
+( id NUMBER(6,0) CONSTRAINT f_gln_id_pk PRIMARY KEY ,
+name VARCHAR2(50),
+date_opened DATE CONSTRAINT f_gln_dt_opened_nn NOT NULL ENABLE,
+address VARCHAR2(50) CONSTRAINT f_gln_add_nn NOT NULL ENABLE,
+city VARCHAR2(30)  CONSTRAINT f_gln_city_nn NOT NULL ENABLE,
+zip_postal_code VARCHAR2(12),
+phone VARCHAR2(20),
+email VARCHAR2(75) ,
+manager_id NUMBER(6,0),
+emergency_contact VARCHAR2(20),
+ CONSTRAINT f_gln_email_uk UNIQUE(email)
+
+);
