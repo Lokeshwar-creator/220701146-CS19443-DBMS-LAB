@@ -1,0 +1,427 @@
+PROGRAM 1
+Write a PL/SQL block to calculate the incentive of an employee whose ID is 110.
+
+DECLARE
+  incentive   NUMBER(8,2);
+BEGIN
+  SELECT salary * 0.12 INTO incentive
+  FROM employees
+  WHERE employee_id = 110;
+DBMS_OUTPUT.PUT_LINE('Incentive  = ' || TO_CHAR(incentive));
+END;
+/
+
+
+PROGRAM 2
+Write a PL/SQL block to show an invalid case-insensitive reference to a quoted and
+without quoted user-defined identifier.
+
+DECLARE
+  "WELCOME" varchar2(10) := 'welcome'; -- identifier with quotation 
+BEGIN
+  DBMS_Output.Put_Line("Welcome"); --reference to the identifier with quotation and different case
+END;
+/
+
+DECLARE
+  WELCOME varchar2(10) := 'welcome'; -- identifier without quotation
+BEGIN
+  DBMS_Output.Put_Line("Welcome"); --reference to the identifier with quotation and different case
+END;
+/
+
+
+PROGRAM 3
+Write a PL/SQL block to adjust the salary of the employee whose ID 122.
+Sample table: employees
+
+DECLARE
+  salary_of_emp  NUMBER(8,2);
+ 
+  PROCEDURE approx_salary (
+    emp        NUMBER, 
+    empsal IN OUT NUMBER,
+    addless     NUMBER
+  ) IS
+  BEGIN
+    empsal := empsal + addless;
+  END;
+ 
+BEGIN
+  SELECT salary INTO salary_of_emp
+  FROM employees
+  WHERE employee_id = 122;
+ 
+  DBMS_OUTPUT.PUT_LINE
+   ('Before invoking procedure, salary_of_emp: ' || salary_of_emp);
+ 
+  approx_salary (100, salary_of_emp, 1000);
+ 
+  DBMS_OUTPUT.PUT_LINE
+   ('After invoking procedure, salary_of_emp: ' || salary_of_emp);
+END;
+/
+
+
+PROGRAM 4
+Write a PL/SQL block to create a procedure using the &quot;IS [NOT] NULL Operator&quot;
+and show AND operator returns TRUE if and only if both operands are TRUE.
+
+PROCEDURE:-
+CREATE OR REPLACE PROCEDURE pri_bool(
+  boo_name   VARCHAR2,
+  boo_val    BOOLEAN
+) IS
+BEGIN
+  IF boo_val IS NULL THEN
+    DBMS_OUTPUT.PUT_LINE( boo_name || ' = NULL');
+  ELSIF boo_val = TRUE THEN
+    DBMS_OUTPUT.PUT_LINE( boo_name || ' = TRUE');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE( boo_name || ' = FALSE');
+  END IF;
+END;
+/
+
+MAIN:-
+DECLARE
+  PROCEDURE pri_m_or_n (
+    m  BOOLEAN,
+    n  BOOLEAN
+  ) IS
+  BEGIN
+   pri_bool ('m', m);
+   pri_bool ('n', n);
+   pri_bool ('m OR n', m OR n);
+ END pri_m_or_n;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('------------- FOR m OR n both FALSE ---------------------');
+ pri_m_or_n (FALSE, FALSE);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m TRUE OR n FALSE ---------------------');
+ pri_m_or_n (TRUE, FALSE);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m FALSE OR n TRUE ---------------------');
+ pri_m_or_n (FALSE, TRUE);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m TRUE OR n TRUE ---------------------');
+ pri_m_or_n (TRUE, TRUE);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m TRUE OR n NULL ---------------------');
+ pri_m_or_n (TRUE, NULL);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m FALSE OR n NULL---------------------');
+ pri_m_or_n (FALSE, NULL);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m NULL OR n TRUE ---------------------');
+ pri_m_or_n (NULL, TRUE);
+DBMS_OUTPUT.PUT_LINE('------------- FOR m NULL OR n FALSE ---------------------');
+ pri_m_or_n (NULL, FALSE);
+END;
+/
+
+
+PROGRAM 5
+Write a PL/SQL block to describe the usage of LIKE operator including wildcard
+characters and escape character.
+
+DECLARE
+  PROCEDURE pat_match (
+    test_string   VARCHAR2,
+    pattern       VARCHAR2
+  ) IS
+  BEGIN
+    IF test_string LIKE pattern THEN
+      DBMS_OUTPUT.PUT_LINE ('TRUE');
+    ELSE
+      DBMS_OUTPUT.PUT_LINE ('FALSE');
+    END IF;
+  END;
+BEGIN
+  pat_match('Blweate', 'B%a_e');
+  pat_match('Blweate', 'B%A_E');
+END;
+/
+
+
+PROGRAM 6
+Write a PL/SQL program to arrange the number of two variable in such a way that
+the small number will store in num_small variable and large number will store in
+num_large variable.
+
+DECLARE
+num_small NUMBER := 8;
+num_large NUMBER := 5;
+num_temp NUMBER;
+BEGIN
+
+IF num_small > num_large THEN
+num_temp := num_small;
+num_small := num_large;
+num_large := num_temp;
+END IF;
+
+DBMS_OUTPUT.PUT_LINE ('num_small = '||num_small);
+DBMS_OUTPUT.PUT_LINE ('num_large = '||num_large);
+END;
+/
+
+
+PROGRAM 7
+Write a PL/SQL procedure to calculate the incentive on a target achieved and
+display the message either the record updated or not.
+
+DECLARE
+  PROCEDURE test1 (
+    sal_achieve  NUMBER,
+    target_qty  NUMBER,
+    emp_id NUMBER
+  )
+  IS
+    incentive   NUMBER := 0;
+    updated  VARCHAR2(3) := 'No';
+  BEGIN
+    IF sal_achieve > (target_qty + 200) THEN
+      incentive := (sal_achieve - target_qty)/4;
+ 
+      UPDATE emp
+      SET salary = salary + incentive 
+      WHERE employee_id = emp_id;
+ 
+      updated := 'Yes';
+    END IF;
+ 
+    DBMS_OUTPUT.PUT_LINE (
+      'Table updated?  ' || updated || ', ' || 
+      'incentive = ' || incentive || '.'
+    );
+  END test1;
+BEGIN
+  test1(2300, 2000, 144);
+  test1(3600, 3000, 145);
+END;
+/
+
+
+PROGRAM 8
+Write a PL/SQL procedure to calculate incentive achieved according to the specific
+sale limit.
+
+DECLARE
+  PROCEDURE test1 (sal_achieve  NUMBER)
+  IS
+    incentive  NUMBER := 0;
+  BEGIN 
+    IF sal_achieve > 44000 THEN
+      incentive := 1800;
+    ELSIF sal_achieve > 32000 THEN
+      incentive := 800;
+    ELSE
+      incentive := 500;
+    END IF;
+ DBMS_OUTPUT.NEW_LINE;
+    DBMS_OUTPUT.PUT_LINE (
+      'Sale achieved : ' || sal_achieve || ', incentive : ' || incentive || '.'
+    );
+  END test1;
+BEGIN
+  test1(45000);
+  test1(36000);
+  test1(28000);
+END;
+/
+
+
+PROGRAM 9
+Write a PL/SQL program to count number of employees in department 50 and
+check whether this department have any vacancies or not. There are 45 vacancies
+in this department.
+
+SET SERVEROUTPUT ON
+DECLARE
+    tot_emp NUMBER;
+BEGIN
+    SELECT Count(*)
+    INTO   tot_emp
+    FROM   employees e
+           join departments d
+             ON e.department_id = d.department_id
+    WHERE  e.department_id = 50;
+
+    dbms_output.Put_line ('The employees are in the department 50: '
+                          ||To_char(tot_emp));
+
+    IF tot_emp >= 45 THEN
+      dbms_output.Put_line ('There are no vacancies in the department 50.');
+    ELSE
+      dbms_output.Put_line ('There are some vacancies in department 50.');
+    END IF;
+END; 
+/
+
+
+PROGRAM 10
+Write a PL/SQL program to count number of employees in a specific department
+and check whether this department have any vacancies or not. If any vacancies,
+how many vacancies are in that department.
+
+SET SERVEROUTPUT ON
+DECLARE
+    tot_emp NUMBER;
+	get_dep_id NUMBER;
+	
+BEGIN
+    get_dep_id := '&new_dep_id';
+    SELECT Count(*)
+    INTO   tot_emp
+    FROM   employees e
+           join departments d
+             ON e.department_id = d.department_id
+    WHERE  e.department_id = get_dep_id;
+
+    dbms_output.Put_line ('The employees are in the department '||get_dep_id||' is: '
+                          ||To_char(tot_emp));
+
+    IF tot_emp >= 45 THEN
+      dbms_output.Put_line ('There are no vacancies in the department '||get_dep_id);
+    ELSE
+      dbms_output.Put_line ('There are '||to_char(45-tot_emp)||' vacancies in department '|| get_dep_id );
+    END IF;
+END; 
+/
+
+PROGRAM 11
+Write a PL/SQL program to display the employee IDs, names, job titles, hire dates,
+and salaries of all employees.
+
+DECLARE
+v_employee_idemployees.employee_id%TYPE;
+v_full_nameemployees.first_name%TYPE;
+v_job_idemployees.job_id%TYPE;
+v_hire_dateemployees.hire_date%TYPE;
+v_salaryemployees.salary%TYPE;
+  CURSOR c_employees IS
+    SELECT employee_id, first_name || ' ' || last_name AS full_name, job_id, hire_date, salary
+    FROM employees;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Employee ID | Full Name | Job Title | Hire Date | Salary');
+  DBMS_OUTPUT.PUT_LINE('-------------------------------------------------------------------');
+  OPEN c_employees;
+  FETCH c_employees INTO v_employee_id, v_full_name, v_job_id, v_hire_date, v_salary;
+  WHILE c_employees%FOUND LOOP
+    DBMS_OUTPUT.PUT_LINE(v_employee_id || '        | ' || v_full_name || ' | ' || v_job_id || ' | ' || v_hire_date || ' | ' || v_salary);
+    FETCH c_employees INTO v_employee_id, v_full_name, v_job_id, v_hire_date, v_salary;
+  END LOOP;
+  CLOSE c_employees;
+END;
+/
+
+
+PROGRAM 12
+Write a PL/SQL program to display the employee IDs, names, and department
+names of all employees.
+
+DECLARE
+  CURSOR emp_cursor IS
+    SELECT e.employee_id, e.first_name, m.first_name AS manager_name
+    FROM employees e
+    LEFT JOIN employees m ON e.manager_id = m.employee_id;
+emp_recordemp_cursor%ROWTYPE;
+BEGIN
+  OPEN emp_cursor;
+  FETCH emp_cursor INTO emp_record;
+  WHILE emp_cursor%FOUND LOOP
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp_record.employee_id);
+    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || emp_record.first_name);
+    DBMS_OUTPUT.PUT_LINE('Manager Name: ' || emp_record.manager_name);
+    DBMS_OUTPUT.PUT_LINE('-------------------------');
+    FETCH emp_cursor INTO emp_record;
+  END LOOP;
+  CLOSE emp_cursor;
+END;
+/
+
+PROGRAM 13
+Write a PL/SQL program to display the job IDs, titles, and minimum salaries of all
+jobs.
+
+DECLARE
+  CURSOR job_cursor IS
+    SELECT job_id, job_title, min_salary
+    FROM jobs;
+job_recordjob_cursor%ROWTYPE;
+BEGIN
+  OPEN job_cursor;
+  FETCH job_cursor INTO job_record;
+  WHILE job_cursor%FOUND LOOP
+    DBMS_OUTPUT.PUT_LINE('Job ID: ' || job_record.job_id);
+    DBMS_OUTPUT.PUT_LINE('Job Title: ' || job_record.job_title);
+    DBMS_OUTPUT.PUT_LINE('Minimum Salary: ' || job_record.min_salary);
+    DBMS_OUTPUT.PUT_LINE('-------------------------');
+    FETCH job_cursor INTO job_record;
+  END LOOP;
+  CLOSE job_cursor;
+END;
+/
+
+
+PROGRAM 14
+Write a PL/SQL program to display the employee IDs, names, and job history start
+dates of all employees.
+
+DECLARE
+    CURSOR employees_cur IS
+      SELECT employee_id,
+             first_name,
+             job_title,
+             hire_date
+      FROM   employees
+             NATURAL join jobs;
+    emp_first_date DATE;
+BEGIN
+    dbms_output.Put_line(Rpad('Employee ID', 15)
+                         ||Rpad('First Name', 25)
+                         ||Rpad('Job Title', 35)
+                         ||'First Date');
+
+dbms_output.Put_line('-----------------------------------------------------------------------------------------');
+
+FOR emp_sal_rec IN employees_cur LOOP
+    -- find out most recent end_date in job_history
+    SELECT Max(end_date) + 1
+    INTO   emp_first_date
+    FROM   job_history
+    WHERE  employee_id = emp_sal_rec.employee_id;
+
+    IF emp_first_date IS NULL THEN
+      emp_first_date := emp_sal_rec.hire_date;
+    END IF;
+
+    dbms_output.Put_line(Rpad(emp_sal_rec.employee_id, 15)
+                         ||Rpad(emp_sal_rec.first_name, 25)
+                         || Rpad(emp_sal_rec.job_title, 35)
+                         || To_char(emp_first_date, 'dd-mon-yyyy'));
+END LOOP;
+END; 
+/
+
+
+PROGRAM 15
+Write a PL/SQL program to display the employee IDs, names, and job history end
+dates of all employees.
+
+DECLARE
+v_employee_idemployees.employee_id%TYPE;
+v_first_nameemployees.first_name%TYPE;
+v_end_datejob_history.end_date%TYPE;
+  CURSOR c_employees IS
+    SELECT e.employee_id, e.first_name, jh.end_date
+    FROM employees e
+    JOIN job_history jh ON e.employee_id = jh.employee_id;
+BEGIN
+  OPEN c_employees;
+  FETCH c_employees INTO v_employee_id, v_first_name, v_end_date;
+  WHILE c_employees%FOUND LOOP
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || v_employee_id);
+    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_first_name);
+    DBMS_OUTPUT.PUT_LINE('End Date: ' || v_end_date);
+    DBMS_OUTPUT.PUT_LINE('----------------------');
+    FETCH c_employees INTO v_employee_id, v_first_name, v_end_date;
+  END LOOP;
+  CLOSE c_employees;
+END;
+/
