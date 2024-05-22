@@ -1,0 +1,66 @@
+
+ 1.Write a query to display the current date. Label the column Date.
+
+Select sysdate from dual;
+
+
+2. The HR department needs a report to display the employee number, last name, salary, and salary increased by 15.5% (expressed as a whole number) for each employee.
+Label the column New Salary.
+
+Select employee_id, last_name, salary, salary+(salary*15.5/100) "New Salary"
+from employees;
+
+
+3.Modify your query lab_03_02.sql to add a column that subtracts the old salary from the new salary. Label the column Increase.
+
+Select employee_id, last_name, salary, salary+(salary*15.5/100) "New Salary", (salary+(salary*15.5/100))-salary "Increses"
+from employees;
+
+
+4.Write a query that displays the last name (with the first letter uppercase and all other letters lowercase) and the length of the last name for all employees whose name starts with the letters J, A, or M. 
+Give each column an appropriate label. Sort the results by the employees’ last names.
+
+Select initcap(last_name) "Name", length(last_name) "Length of Name" from employees
+where last_name like 'J%' or last_name like 'A%' or last_name like 'M%'
+order by last_name;
+
+
+5.Rewrite the query so that the user is prompted to enter a letter that starts the last name. For example, if the user enters H when prompted for a letter,
+then the output should show all employees whose last name starts with the letter H.
+
+Select initcap(last_name) "Name", length(last_name) "Length of Name"
+from employees
+where last_name like '&name%'
+order by last_name;
+
+
+6.The HR department wants to find the length of employment for each employee. For each employee, display the last name and calculate the number of months between today and the date on which the employee was hired.
+Label the column MONTHS_WORKED.Order your results by the number of months employed. Round the number of months up to the closest whole number.
+
+Select last_name, round(months_between(sysdate,hire_date),0) Months_worked from employees
+order by 2;
+
+
+7.Create a report that produces the following for each employee: <employee last name> earns <salary> monthly but wants <3 times salary>. Label the column Dream Salaries.
+
+Select last_name||' earns $'||salary||' monthly but wants $'||salary*3 "Dream Salary"
+from employees
+
+
+ 8.Create a query to display the last name and salary for all employees. Format the salary to be 15 characters long, left-padded with the $ symbol. Label the column SALARY.
+
+Select last_name, lpad(salary,15,'$') Salary
+ from employees;
+
+
+9.Display each employee’s last name, hire date, and salary review date, which is the first Monday after six months of service.
+Label the column REVIEW. Format the dates to appear in the format similar to “Monday, the Thirty-First of July, 2000.”
+
+Select last_name, hire_date, to_char((next_day(hire_date,'Monday')),'fmday," the "ddspth "of" month,yyyy') from employees;
+
+
+10.Display the last name, hire date, and day of the week on which the employee started. Label the column DAY. Order the results by the day of the week, starting with Monday.
+
+Select Last_name, hire_date, to_char(hire_date,'Day') "Day"
+from employees
+order by to_char(hire_date-1,'d')
