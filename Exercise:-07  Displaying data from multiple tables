@@ -1,0 +1,96 @@
+1. Write a query to display the last name, department number, and department name for all
+   employees.
+
+	SELECT e.last_name, e.department_id, d.department_name
+	FROM employees e, departments d
+	WHERE e.department_id = d.department_id;
+
+2. Create a unique listing of all jobs that are in department 80. Include the location of the
+   department in the output.
+
+	SELECT DISTINCT job_id, location_id
+	FROM employees, departments
+	WHERE employees.department_id = departments.department_id
+	AND employees.department_id = 80;
+
+3. Write a query to display the employee last name, department name, location ID, and city of all
+   employees who earn a commission.
+
+	SELECT e.last_name, d.department_name, d.location_id, l.city
+	FROM employees e, departments d, locations l
+	WHERE e.department_id = d.department_id
+	AND
+	d.location_id = l.location_id
+	AND e.commission_pct IS NOT NULL;
+
+4. Display the employee last name and department name for all employees who have an a
+   (lowercase) in their last names. Place your SQL statement in a text file named test4.sql.
+
+	SELECT last_name, department_name
+	FROM employees, departments
+	WHERE employees.department_id = departments.department_id
+	AND last_name LIKE ’%a%’;
+
+5. Write a query to display the last name, job, department number, and department name for all
+   employees who work in Toronto.
+
+	SELECT 	e.last_name, e.job_id, e.department_id,d.department_name
+	FROM 	employees e JOIN departments d
+	ON 	(e.department_id = d.department_id)
+	JOIN 	locations l
+	ON 	(d.location_id = l.location_id)
+	WHERE 	LOWER(l.city) = ’toronto’;
+
+6. Display the employee last name and employee number along with their manager’s last name and
+   manager number. Label the columns Employee , Emp#, Manager, Mgr#, respectively.
+   Place your SQL statement in a text file named test6.sql.
+
+	SELECT	 w.last_name "Employee", w.employee_id "EMP#",
+	         m.last_name "Manager", m.employee_id "Mgr#"
+	FROM     employees w join employees m
+	ON       (w.manager_id = m.employee_id);
+
+7. Modify test6.sql to display all employees including King, who has no manager.
+   Place your SQL statement in a text file named test7.sql. Run the query in lab4_7.sql
+	SELECT w.last_name "Employee", w.employee_id "EMP#",
+	m.last_name "Manager", m.employee_id "Mgr#"
+	FROM employees w
+	LEFT OUTER JOIN employees m
+	ON (w.manager_id = m.employee_id);
+
+8. Create a query that displays employee last names, department numbers, and all the
+   employees who work in the same department as a given employee. Give each column an
+   appropriate label.
+
+	SELECT e.department_id department, e.last_name employee,
+	c.last_name colleague
+	FROM employees e JOIN employees c
+	ON (e.department_id = c.department_id)
+	WHERE e.employee_id <> c.employee_id
+	ORDER BY e.department_id, e.last_name, c.last_name;
+
+9. Show the structure of the JOB_GRADES table. Create a query that displays the name, job,
+   department name, salary, and grade for all employees.
+
+	DESC JOB_GRADES
+	SELECT e.last_name, e.job_id, d.department_name,
+	e.salary, j.grade_level
+	FROM employees e, departments d, job_grades j
+	WHERE e.department_id = d.department_id
+	AND e.salary BETWEEN j.lowest_sal AND j.highest_sal;
+
+10. Create a query to display the name and hire date of any employee hired after employee Davies.
+
+	SELECT e.last_name, e.hire_date
+	FROM employees e, employees davies
+	WHERE davies.last_name = ’Davies’
+	AND davies.hire_date < e.hire_date
+
+11. Display the names and hire dates for all employees who were hired before their managers, along
+    with their manager’s names and hire dates. Label the columns Employee, Emp
+    Hired, Manager, and Mgr Hired, respectively.
+
+	SELECT w.last_name, w.hire_date, m.last_name, m.hire_date
+	FROM employees w, employees m
+	WHERE w.manager_id = m.employee_id
+	AND w.hire_date < m.hire_date;
