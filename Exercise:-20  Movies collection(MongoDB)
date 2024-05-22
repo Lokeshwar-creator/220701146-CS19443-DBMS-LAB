@@ -1,0 +1,169 @@
+Sample document of movies collection
+{
+_id: ObjectId(&quot;573a1390f29313caabcd42e8&quot;),
+plot: &#39;A group of bandits stage a brazen train hold-up, only to find a determined posse hot on their heels.&#39;,
+genres: [ &#39;Short&#39;, &#39;Western&#39; ],
+runtime: 11,
+cast: [
+&#39;A.C. Abadie&#39;,
+&quot;Gilbert M. &#39;Broncho Billy&#39; Anderson&quot;,
+&#39;George Barnes&#39;,
+&#39;Justus D. Barnes&#39;
+],
+poster: &#39;https://m.media-
+amazon.com/images/M/MV5BMTU3NjE5NzYtYTYyNS00MDVmLWIwYjgtMmYwYWIxZDYyNzU2XkEyXkFqcG
+deQXVyNzQzNzQxNzI@._V1_SY1000_SX677_AL_.jpg&#39;,
+title: &#39;The Great Train Robbery&#39;,
+fullplot: &quot;Among the earliest existing films in American cinema - notable as the first film that presented a
+narrative story to tell - it depicts a group of cowboy outlaws who hold up a train and rob the passengers.
+They are then pursued by a Sheriff&#39;s posse. Several scenes have color included - all hand tinted.&quot;,
+
+languages: [ &#39;English&#39; ],
+released: ISODate(&quot;1903-12-01T00:00:00.000Z&quot;),
+directors: [ &#39;Edwin S. Porter&#39; ],
+rated: &#39;TV-G&#39;,
+awards: { wins: 1, nominations: 0, text: &#39;1 win.&#39; },
+lastupdated: &#39;2015-08-13 00:27:59.177000000&#39;,
+year: 1903,
+imdb: { rating: 7.4, votes: 9847, id: 439 },
+countries: [ &#39;USA&#39; ],
+type: &#39;movie&#39;,
+tomatoes: {
+viewer: { rating: 3.7, numReviews: 2559, meter: 75 },
+fresh: 6,
+critic: { rating: 7.6, numReviews: 6, meter: 100 },
+rotten: 0,
+lastUpdated: ISODate(&quot;2015-08-08T19:16:10.000Z&quot;)
+}
+
+
+
+
+1.Find all movies with full information from the &#39;movies&#39; collection that released in
+the year 1893.
+
+db.movies.find({ year: 1893 })
+
+
+2. Find all movies with full information from the &#39;movies&#39; collection that have a
+runtime greater than 120 minutes.
+
+db.movies.find({ "runtime": { $gt: 120 } })
+
+
+3. Find all movies with full information from the &#39;movies&#39; collection that have Short genre.
+
+db.movies.find({ "genres": "Short" })
+
+
+4. Retrieve all movies from the &#39;movies&#39; collection that were directed by &quot;William
+K.L. Dickson&quot; and include complete information for each movie.
+
+db.movies.find({ directors: "William K.L. Dickson" })
+
+
+5. Retrieve all movies from the &#39;movies&#39; collection that were released in the USA
+and include complete information for each movie.
+
+db.movies.find({ countries: "USA" })
+
+
+6. Retrieve all movies from the &#39;movies&#39; collection that have complete information
+and are rated as &quot;UNRATED&quot;.
+
+db.movies.find({ rated: "UNRATED" })
+
+
+7. Retrieve all movies from the &#39;movies&#39; collection that have complete information
+and have received more than 1000 votes on IMDb.
+
+db.movies.find({ "imdb.votes": { $gt: 1000 } })
+
+
+8. Retrieve all movies from the &#39;movies&#39; collection that have complete information
+and have an IMDb rating higher than 7.
+
+db.movies.find({ "imdb.rating": { $gt: 7 } })
+
+
+9. Retrieve all movies from the &#39;movies&#39; collection that have complete information
+and have a viewer rating higher than 4 on Tomatoes.
+
+db.movies.find({
+  "tomatoes.viewer.rating": { $gt: 4 }
+})
+
+
+10. Retrieve all movies from the &#39;movies&#39; collection that have received an award.
+
+db.movies.find({
+  "awards": { $exists: true }
+})
+
+
+11. Find all movies with title, languages, released, directors, writers, awards, year,
+genres, runtime, cast, countries from the &#39;movies&#39; collection in MongoDB that have
+at least one nomination.
+
+db.movies.find({
+  "awards.nominations": { $gt: 0 }
+}, {
+  "title": 1,
+  "languages": 1,
+  "released": 1,
+  "directors": 1,
+  "writers": 1,
+  "awards": 1,
+  "year": 1,
+  "genres": 1,
+  "runtime": 1,
+  "cast": 1,
+  "countries": 1
+})
+
+
+12. Find all movies with title, languages, released, directors, writers, awards, year,
+genres, runtime, cast, countries from the &#39;movies&#39; collection in MongoDB with cast
+including &quot;Charles Kayser&quot;.
+
+db.movies.find({
+  "cast": "Charles Kayser"
+}, {
+  "title": 1,
+  "languages": 1,
+  "released": 1,
+  "directors": 1,
+  "writers": 1,
+  "awards": 1,
+  "year": 1,
+  "genres": 1,
+  "runtime": 1,
+  "cast": 1,
+  "countries": 1
+})
+
+
+13. Retrieve all movies with title, languages, released, directors, writers, countries
+from the &#39;movies&#39; collection in MongoDB that released on May 9, 1893.
+
+db.movies.find({
+released: ISODate("1893-05-09T00:00:00.000Z")
+},
+{
+title: 1,
+languages: 1,
+released: 1,
+directors: 1,
+writers: 1,
+countries: 1
+})
+
+
+14. Retrieve all movies with title, languages, released, directors, writers, countries
+
+db.movies.find(
+{ title: { $regex: /scene/i } },
+{ title: 1, languages: 1, released: 1, directors: 1, writers: 1, countries: 1 }
+)
+
+from the &#39;movies&#39; collection in MongoDB that have a word &quot;scene&quot; in the title.
