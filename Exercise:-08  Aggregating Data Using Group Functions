@@ -1,0 +1,77 @@
+Determine the validity of the following three statements. Circle either True or False.
+1. Group functions work across many rows to produce one result per group.
+True
+
+2. Group functions include nulls in calculations.
+False
+
+3. The WHERE clause restricts rows prior to inclusion in a group calculation.
+True
+
+4.Find the highest, lowest, sum, and average salary of all employees. Label the columns Maximum, Minimum, Sum, and Average, respectively.
+Round your results to the nearest whole number. 
+
+SELECT ROUND(MAX(salary),0) "Maximum",
+ROUND(MIN(salary),0) "Minimum",
+ROUND(SUM(salary),0) "Sum",
+ROUND(AVG(salary),0) "Average"
+FROM employees;
+
+5.Modify the above query to display the minimum, maximum, sum, and average salary for each job type.
+
+SELECT job_id, ROUND(MAX(salary),0) "Maximum",
+ROUND(MIN(salary),0) "Minimum",
+ROUND(SUM(salary),0) "Sum",
+ROUND(AVG(salary),0) "Average"
+FROM employees
+GROUP BY job_id;
+
+6.Write a query to display the number of people with the same job. Generalize the query so that the
+user in the HR department is prompted for a job title.
+
+Select job_id,count(*) from employees
+Where job_id='&job_title'
+Group by job_id;
+
+7. Determine the number of managers without listing them. Label the column Number
+of Managers. Hint: Use the MANAGER_ID column to determine the number of
+managers.
+
+Select count(Distinct manager_id) "Number of managers" from employee;
+
+8.Write a query that displays the difference between the highest and lowest salaries. Label the column DIFFERENCE. 
+
+SELECT MAX(salary) - MIN(salary) DIFFERENCE
+FROM employees;
+
+9.Create a report to display the manager number and the salary of the lowest-paid employee for that manager. Exclude anyone whose manager is not known. Exclude any
+groups where the minimum salary is $6,000 or less. Sort the output in descending order of salary.
+
+SELECT reports_to, MIN(salary) FROM employees
+WHERE salary <= 6000 AND reports_to IS NOT NULL
+GROUP BY reports_to
+ORDER BY MIN(salary)DESC;
+
+10. Create a query to display the total number of employees and, of that total, the number of employees hired in 1995, 1996, 1997, and 1998.
+Create appropriate column headings.
+
+SELECT COUNT(*) AS 'total',
+SUM(IF(hire_date LIKE '1995%', 1, 0)) AS '1995',
+SUM (IF(hire_date LIKE '1997%',1,0))!'1977',
+SUM (IF(hire_date LIKE '1998%',1,0))!'1978'
+FROM employees;
+
+11. Create a matrix query to display the job, the salary for that job based on department number, and the total salary for that job, 
+for departments 20, 50, 80, and 90, giving each column an appropriate heading.
+
+SELECT current_job_id AS 'JOB',
+SUM(IF(department_id=20,salary,0)) AS'Dept 20',
+SUM(IF(department_id=50,salary,0)) AS'Dept 50',
+SUM(if(department_id=80,salary,0)) AS'Dept 80',
+SUM(salary) AS 'Total' FROM employees
+GROUP BY current_job_id;
+
+12.Write a query to display each department’s name, location, number of employees, and the average salary for all the employees in that department.
+Label the column name-Location, Number of people, and salary respectively. Round the average salary to two decimal places.
+
+Select employee_id,departmant_name,ROUND(AVG(Salary),2) From employees;
